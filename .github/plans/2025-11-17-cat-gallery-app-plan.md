@@ -9,6 +9,7 @@
 Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolkit for state management, RTK Query for API calls, and custom hooks for business logic. The app will include cat listing with pagination, detailed views, favorites management, and offline support with proper TypeScript typing and performance optimization.
 
 **Key Technologies**:
+
 - Expo Router for navigation
 - Redux Toolkit + RTK Query for state management & API calls
 - AsyncStorage for persistence
@@ -18,6 +19,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 ## Requirements
 
 ### Functional Requirements
+
 - **Cat List Screen**: Fetch and display scrollable list of cats with pagination
 - **Cat Detail Screen**: Show full cat details when user selects a cat
 - **Favorites Management**: Mark/unmark cats as favorites; persist across sessions
@@ -25,6 +27,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 - **Offline Support**: Cache API data and allow viewing favorites offline
 
 ### Non-Functional Requirements
+
 - TypeScript strict mode for type safety
 - Clean, readable code with proper separation of concerns
 - Performance optimization to prevent unnecessary re-renders
@@ -32,6 +35,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 - Modular, scalable folder structure
 
 ### Constraints
+
 - Use Redux Toolkit for state management and RTK Query for API
 - Use FlatList with keyExtractor for cat list
 - Implement custom hooks to separate UI from business logic
@@ -41,6 +45,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 ## Current State Analysis
 
 ### Existing Setup
+
 - ✅ Expo project initialized with TypeScript support
 - ✅ React 19, React Native 0.81.5 configured
 - ✅ Expo Router v6 installed for navigation
@@ -52,6 +57,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 - ❌ Folder structure for features/screens not created
 
 ### Dependencies to Add
+
 ```json
 {
   "@reduxjs/toolkit": "^1.9.x",
@@ -62,6 +68,7 @@ Build a feature-rich React Native Cat Gallery app using The Cat API, Redux Toolk
 ```
 
 ### Current App Structure
+
 ```
 app/
   _layout.tsx (Root Stack)
@@ -111,27 +118,32 @@ TheCatsApi/
 #### Phase 1: Setup & Store Configuration (Foundation)
 
 **1.1 Install Dependencies**
+
 ```bash
 npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-storage
 ```
 
 **1.2 Create Type Definitions** – [`types/index.ts`]
+
 - Define `Cat` interface with all API response fields
 - Define `FavoritesState` interface
 - Define API pagination/response interfaces
 
 **1.3 Create Constants** – [`constants/api.ts`]
+
 - API base URL: `https://api.thecatapi.com/v1`
 - API key constant
 - Pagination defaults (limit per page)
 
 **1.4 Configure Redux Store** – [`store/store.ts`]
+
 - Initialize store with Redux Toolkit
 - Add favorites slice reducer
 - Configure persistence with AsyncStorage middleware
 - Export typed hooks: `useAppDispatch`, `useAppSelector`
 
 **1.5 Create Favorites Slice** – [`store/slices/favoritesSlice.ts`]
+
 - State: array of favorite cat IDs
 - Actions: `addFavorite`, `removeFavorite`, `initializeFavorites` (from storage)
 - Selectors: `selectFavorites`, `selectIsFavorite`
@@ -140,6 +152,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 #### Phase 2: API Layer with RTK Query (Data Fetching)
 
 **2.1 Create RTK Query API** – [`store/api/catsApi.ts`]
+
 - Configure base query with API URL and authentication header
 - Endpoint: `getCats` (with pagination: limit, offset)
 - Endpoint: `getCatById` (for detail view)
@@ -149,6 +162,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 **2.2 Create Custom Hooks** – [`hooks/`]
 
 **`useCats.ts`** – Pagination & list management
+
 ```
 - Input: page number
 - Output: { cats, isLoading, error, hasMore, loadMore }
@@ -157,6 +171,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **`useCatDetail.ts`** – Single cat details
+
 ```
 - Input: cat ID
 - Output: { cat, isLoading, error }
@@ -164,6 +179,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **`useFavorites.ts`** – Favorites management
+
 ```
 - Input: cat ID
 - Output: { isFavorite, toggleFavorite }
@@ -172,6 +188,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **`useLocalStorage.ts`** – General persistence
+
 ```
 - Generic hook for persisting data to AsyncStorage
 - Input/Output: [value, setValue, isLoading]
@@ -182,6 +199,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 **3.1 Create Memoized Components** – [`components/`]
 
 **`CatListItem.tsx`** – Wrapped with `React.memo`
+
 ```
 - Props: cat object, onPress callback
 - Display: cat image, name, breed
@@ -190,12 +208,14 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **`CatCard.tsx`** – Detail view component
+
 ```
 - Props: cat object
 - Display: full cat info (image, breed, description, temperament)
 ```
 
 **`FavoriteButton.tsx`** – Toggle button
+
 ```
 - Props: catId, isFavorite, onToggle
 - Display: icon button with favorite state
@@ -203,11 +223,13 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **`LoadingSpinner.tsx`** – Loading state
+
 ```
 - ActivityIndicator or Skeleton
 ```
 
 **`ErrorBoundary.tsx`** – Error handling
+
 ```
 - Catch and display errors gracefully
 ```
@@ -215,6 +237,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 #### Phase 4: Screens Implementation (Navigation Routes)
 
 **4.1 Root Layout** – [`app/_layout.tsx`] (Modify existing)
+
 ```
 - Wrap with Redux Provider
 - Setup Stack navigation
@@ -222,6 +245,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **4.2 Cat List Screen** – [`app/index.tsx`] (Modify existing)
+
 ```
 - FlatList component
 - keyExtractor: item.id
@@ -232,6 +256,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **4.3 Cat Detail Screen** – [`app/[id].tsx`] (Create new)
+
 ```
 - useLocalSearchParams to get cat ID
 - useCatDetail hook for data
@@ -243,6 +268,7 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ```
 
 **4.4 Favorites Screen** – [`app/favorites.tsx`] or Tab (Create new)
+
 ```
 - useFavorites hook to get favorite cat IDs
 - Filter cats from Redux state
@@ -254,16 +280,19 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 #### Phase 5: Navigation Setup (Expo Router)
 
 **5.1 Root Layout Configuration** – [`app/_layout.tsx`]
+
 - Provider wrapper for Redux store
 - Stack or Tab navigator setup
 - Define screen options (headers, transitions)
 
 **5.2 Dynamic Routes**
+
 - `/` – Cat list
 - `/[id]` – Cat detail (dynamic route)
 - `/favorites` – Favorites list
 
 **5.3 Header Configuration**
+
 - Cat list: show favorites count badge
 - Cat detail: show favorite toggle button + favorites count
 - Favorites: show list title
@@ -271,7 +300,9 @@ npm install @reduxjs/toolkit react-redux @react-native-async-storage/async-stora
 ### Technical Details
 
 #### Type System (TypeScript)
+
 **`types/index.ts`**:
+
 ```typescript
 interface Cat {
   id: string;
@@ -302,14 +333,18 @@ interface CatsListParams {
 ```
 
 #### RTK Query Configuration
+
 **`store/api/catsApi.ts`**:
+
 - Base URL: `https://api.thecatapi.com/v1`
 - Auth header: `x-api-key: {API_KEY}`
 - Cache behavior: Keep data for offline access
 - Stale time: 5 minutes (cats don't change frequently)
 
 #### Redux Store Structure
+
 **`store/store.ts`**:
+
 ```
 store
 ├── favorites (slice)
@@ -321,6 +356,7 @@ store
 ```
 
 #### Performance Optimizations
+
 1. **React.memo** on `CatListItem` – prevent re-renders on parent updates
 2. **useCallback** on handlers – stable references
 3. **useMemo** on derived data – expensive computations
@@ -332,12 +368,14 @@ store
 5. **Image optimization** – use Expo Image with placeholder
 
 #### Error Handling
+
 - Try-catch in async operations
 - Error messages displayed to user
 - Retry logic in RTK Query
 - Graceful degradation for offline mode
 
 #### Offline Support Implementation
+
 1. **RTK Query caching** – automatically cache API responses
 2. **Redux persistence** – favorites saved to AsyncStorage
 3. **Detect offline** – use `@react-native-community/netinfo` (optional) or rely on RTK Query error handling
@@ -347,6 +385,7 @@ store
 ### Code Patterns to Follow
 
 1. **Custom Hook Pattern**:
+
 ```typescript
 export function useCats(page: number) {
   const { data, isLoading, error } = useGetCatsQuery({...});
@@ -356,6 +395,7 @@ export function useCats(page: number) {
 ```
 
 2. **Memoized Component Pattern**:
+
 ```typescript
 const CatListItem = React.memo(({ cat, onPress }: Props) => (
   <TouchableOpacity onPress={() => onPress(cat.id)}>
@@ -365,6 +405,7 @@ const CatListItem = React.memo(({ cat, onPress }: Props) => (
 ```
 
 3. **Redux Selector Pattern**:
+
 ```typescript
 export const selectIsFavorite = (state: RootState, catId: string) =>
   state.favorites.ids.includes(catId);
@@ -373,16 +414,19 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 ## Alternatives Considered
 
 ### 1. State Management Approach
+
 - **Chosen**: Redux Toolkit + RTK Query (favorites + API data separately)
 - **Alternative**: Context API + custom hooks (simpler but less scalable)
 - **Rationale**: Redux provides better DevTools debugging, middleware support for persistence, and RTK Query handles caching elegantly
 
 ### 2. Navigation Structure
+
 - **Chosen**: Tab navigation (List | Favorites) with dynamic detail route
 - **Alternative**: Stack-only navigation
 - **Rationale**: Tab navigation provides better UX for switching between list and favorites
 
 ### 3. Persistence Strategy
+
 - **Chosen**: AsyncStorage for Redux state, RTK Query cache for API data
 - **Alternative**: SQLite with WatermelonDB
 - **Rationale**: AsyncStorage sufficient for favorites list; RTK Query handles API caching automatically
@@ -390,16 +434,19 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 ## Testing Strategy
 
 ### Unit Tests
+
 - Redux slices: actions, reducers, selectors
 - Custom hooks: mock RTK Query and Redux
 - Utility functions: helpers.ts functions
 
 ### Integration Tests
+
 - Screen navigation flow (list → detail → favorites)
 - Favorite toggle workflow
 - Pagination loading more cats
 
 ### Manual Testing Scenarios
+
 1. Scroll cat list, mark favorites, see badge update
 2. Navigate to detail, toggle favorite, return to list
 3. Go to favorites screen, see only marked cats
@@ -409,13 +456,13 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 
 ## Risks & Mitigation
 
-| Risk | Mitigation |
-|------|-----------|
-| API rate limiting | Implement exponential backoff, cache aggressively |
-| Large image loading | Use lazy loading with FlatList, optimize image sizes |
+| Risk                          | Mitigation                                                 |
+| ----------------------------- | ---------------------------------------------------------- |
+| API rate limiting             | Implement exponential backoff, cache aggressively          |
+| Large image loading           | Use lazy loading with FlatList, optimize image sizes       |
 | Redux state becomes too large | Start lean, only favorites in Redux; use RTK Query for API |
-| Favorites sync issues | Test AsyncStorage persistence, add error boundaries |
-| Offline mode confusion | Show offline indicator when no connection detected |
+| Favorites sync issues         | Test AsyncStorage persistence, add error boundaries        |
+| Offline mode confusion        | Show offline indicator when no connection detected         |
 
 ## Open Questions
 
@@ -427,6 +474,7 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 ## Implementation Checklist
 
 ### Phase 1: Setup
+
 - [ ] Add Redux Toolkit, React-Redux, AsyncStorage to package.json
 - [ ] Create `store/store.ts` with Redux configuration
 - [ ] Create `store/slices/favoritesSlice.ts` with actions/reducers
@@ -434,6 +482,7 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 - [ ] Create `constants/api.ts` with API configuration
 
 ### Phase 2: API Layer
+
 - [ ] Create `store/api/catsApi.ts` with RTK Query endpoints
 - [ ] Create `hooks/useCats.ts` for pagination
 - [ ] Create `hooks/useCatDetail.ts` for detail view
@@ -441,6 +490,7 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 - [ ] Create `hooks/useLocalStorage.ts` for persistence
 
 ### Phase 3: Components
+
 - [ ] Create `components/CatListItem.tsx` (memoized)
 - [ ] Create `components/CatCard.tsx`
 - [ ] Create `components/FavoriteButton.tsx`
@@ -448,12 +498,14 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 - [ ] Create `components/ErrorBoundary.tsx`
 
 ### Phase 4: Screens
+
 - [ ] Update `app/_layout.tsx` with Redux Provider + navigation setup
 - [ ] Update `app/index.tsx` as Cat List Screen
 - [ ] Create `app/[id].tsx` as Cat Detail Screen
 - [ ] Create `app/favorites.tsx` or tab for Favorites Screen
 
 ### Phase 5: Testing & Refinement
+
 - [ ] Test cat list pagination
 - [ ] Test favorite toggle and persistence
 - [ ] Test navigation flow
@@ -463,6 +515,7 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 ## Resources
 
 ### Documentation Links
+
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [RTK Query](https://redux-toolkit.js.org/rtk-query/overview)
 - [Expo Router](https://docs.expo.dev/routing/introduction/)
@@ -471,12 +524,14 @@ export const selectIsFavorite = (state: RootState, catId: string) =>
 - [React.memo Documentation](https://react.dev/reference/react/memo)
 
 ### Related Files
+
 - Configuration: `app.json`, `tsconfig.json`, `package.json`
 - Example screens: `app-example/`
 
 ---
 
 **Next Steps**: Review this plan. Provide feedback on:
+
 1. Navigation structure preference (tabs vs stack)?
 2. Image pagination count (cats per page)?
 3. Any specific design preferences for UI?

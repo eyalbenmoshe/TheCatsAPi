@@ -8,16 +8,16 @@
 
 ## ✅ CONFIRMED SPECIFICATIONS
 
-| Aspect | Decision |
-|--------|----------|
-| **Navigation** | Stack-based with header (no bottom tabs) |
-| **Pagination** | 12 cats per page (within 10-15 range) |
-| **Offline Indicator** | YES - Visual banner when offline |
-| **Header Badge** | Total favorites count (global) |
-| **Type Organization** | Dedicated `types/` folder (separate) |
-| **UI Components** | React.memo, useCallback, useMemo optimized |
-| **State Management** | Redux Toolkit + RTK Query |
-| **API Caching** | RTK Query automatic + AsyncStorage for favorites |
+| Aspect                | Decision                                         |
+| --------------------- | ------------------------------------------------ |
+| **Navigation**        | Stack-based with header (no bottom tabs)         |
+| **Pagination**        | 12 cats per page (within 10-15 range)            |
+| **Offline Indicator** | YES - Visual banner when offline                 |
+| **Header Badge**      | Total favorites count (global)                   |
+| **Type Organization** | Dedicated `types/` folder (separate)             |
+| **UI Components**     | React.memo, useCallback, useMemo optimized       |
+| **State Management**  | Redux Toolkit + RTK Query                        |
+| **API Caching**       | RTK Query automatic + AsyncStorage for favorites |
 
 ---
 
@@ -64,6 +64,7 @@ TheCatsApi/
 ## Phase 1: Setup & Dependencies ⚙️
 
 ### 1.1 Install Required Packages
+
 ```bash
 npm install @reduxjs/toolkit react-redux \
   @react-native-async-storage/async-storage \
@@ -73,6 +74,7 @@ npm install @reduxjs/toolkit react-redux \
 ### 1.2 Type Files (Order matters!)
 
 **`types/index.ts`** - Cat API types
+
 ```typescript
 // Cat interface from The Cat API
 // CatsResponse interface for paginated results
@@ -80,6 +82,7 @@ npm install @reduxjs/toolkit react-redux \
 ```
 
 **`types/store.ts`** - Redux state types
+
 ```typescript
 // FavoritesState interface
 // RootState (full Redux state)
@@ -87,6 +90,7 @@ npm install @reduxjs/toolkit react-redux \
 ```
 
 **`types/navigation.ts`** - Router types
+
 ```typescript
 // RootStackParamList
 // Navigation prop types
@@ -95,9 +99,11 @@ npm install @reduxjs/toolkit react-redux \
 ### 1.3 Constants
 
 **`constants/api.ts`**
+
 ```typescript
-export const CAT_API_BASE_URL = 'https://api.thecatapi.com/v1';
-export const CAT_API_KEY = 'live_VmQOLtk4O8ZpTj0dPTwd3D6mGujtsqKWF3oaYLTL6ylN78pxJvfJiWfdSe5iORcJ';
+export const CAT_API_BASE_URL = "https://api.thecatapi.com/v1";
+export const CAT_API_KEY =
+  "live_VmQOLtk4O8ZpTj0dPTwd3D6mGujtsqKWF3oaYLTL6ylN78pxJvfJiWfdSe5iORcJ";
 export const CATS_PER_PAGE = 12;
 export const CACHE_TIME_MINUTES = 5;
 ```
@@ -105,11 +111,13 @@ export const CACHE_TIME_MINUTES = 5;
 ### 1.4 Redux Store
 
 **`store/store.ts`** - Configure with:
+
 - Redux Toolkit setup
 - AsyncStorage persistence middleware
 - Typed hooks export: `useAppDispatch`, `useAppSelector`
 
 **`store/slices/favoritesSlice.ts`** - Includes:
+
 - State: `{ ids: string[] }`
 - Actions: `addFavorite`, `removeFavorite`, `initializeFavorites`
 - Selectors: `selectFavorites`, `selectIsFavorite`, `selectFavoritesCount`
@@ -122,6 +130,7 @@ export const CACHE_TIME_MINUTES = 5;
 ### 2.1 RTK Query Setup
 
 **`store/api/catsApi.ts`**
+
 - Base query: API URL + headers (x-api-key)
 - Endpoint `getCats`: `{ limit, offset }` → returns paginated list
 - Endpoint `getCatById`: `{ id }` → returns single cat
@@ -131,27 +140,32 @@ export const CACHE_TIME_MINUTES = 5;
 ### 2.2 Custom Hooks
 
 **`hooks/useCats.ts`**
+
 - Input: `page` number
 - Output: `{ cats, isLoading, error, hasMore, loadMore, currentPage }`
 - Handles offset calculation
 - Integrates with RTK Query
 
 **`hooks/useCatDetail.ts`**
+
 - Input: `catId`
 - Output: `{ cat, isLoading, error }`
 - Fetches single cat from API
 
 **`hooks/useFavorites.ts`**
+
 - Input: `catId`
 - Output: `{ isFavorite, toggleFavorite, favoritesCount }`
 - Dispatches Redux actions
 - Returns count for badge
 
 **`hooks/useNetworkStatus.ts`**
+
 - Output: `{ isOnline, isLoading }`
 - Uses NetInfo to detect connection
 
 **`hooks/useLocalStorage.ts`** (Generic persistence)
+
 - Input: `key, initialValue`
 - Output: `[value, setValue, isLoading]`
 - Auto-syncs to AsyncStorage
@@ -163,35 +177,46 @@ export const CACHE_TIME_MINUTES = 5;
 All components use `React.memo` with custom comparison to prevent unnecessary re-renders.
 
 ### List Item Component
+
 **`components/CatListItem.tsx`**
+
 - Props: `cat` (Cat), `onPress` (callback)
 - Display: image + name + breed
 - Memoized to prevent re-renders
 
 ### Detail View Component
+
 **`components/CatCard.tsx`**
+
 - Props: `cat` (Cat)
 - Display: full image, breed details, description, temperament
 
 ### Favorite Button
+
 **`components/FavoriteButton.tsx`**
+
 - Props: `catId`, `isFavorite`, `onToggle`
 - Display: heart icon (filled when favorite)
 - Callback on press with useCallback
 
 ### Header Component
+
 **`components/Header.tsx`**
+
 - Props: `favoritesCount`
 - Display: title + heart icon with badge showing count
 - Badge appears globally on all screens
 
 ### Offline Indicator
+
 **`components/OfflineIndicator.tsx`**
+
 - Props: `isOnline` (boolean)
 - Display: red banner "You are offline" when offline
 - Hidden when online
 
 ### Loading & Error
+
 **`components/LoadingSpinner.tsx`** - ActivityIndicator
 **`components/ErrorMessage.tsx`** - Error text + retry button
 
@@ -200,7 +225,9 @@ All components use `React.memo` with custom comparison to prevent unnecessary re
 ## Phase 4: Screens 📱
 
 ### Root Layout
+
 **`app/_layout.tsx`** (Modify)
+
 ```tsx
 - Wrap with Redux Provider (store)
 - Setup Stack navigator
@@ -210,7 +237,9 @@ All components use `React.memo` with custom comparison to prevent unnecessary re
 ```
 
 ### Cat List Screen
+
 **`app/index.tsx`** (Modify)
+
 ```tsx
 - useCats(1) hook for initial load
 - FlatList:
@@ -224,7 +253,9 @@ All components use `React.memo` with custom comparison to prevent unnecessary re
 ```
 
 ### Cat Detail Screen
+
 **`app/[id].tsx`** (Create)
+
 ```tsx
 - useLocalSearchParams() get ID
 - useCatDetail(id) hook for data
@@ -242,14 +273,15 @@ All components use `React.memo` with custom comparison to prevent unnecessary re
 ## Phase 5: Offline Support 🔌➡️❌
 
 ### AsyncStorage Integration
+
 **`utils/asyncStorage.ts`**
+
 ```typescript
-- saveToStorage(key, value)
-- loadFromStorage(key)
-- removeFromStorage(key)
+-saveToStorage(key, value) - loadFromStorage(key) - removeFromStorage(key);
 ```
 
 ### Persistence Strategy
+
 1. **Favorites**: Redux state → AsyncStorage (on every change)
 2. **API Cache**: RTK Query automatic (keeps data indefinitely)
 3. **Initialize**: Load favorites on app startup
@@ -261,16 +293,18 @@ All components use `React.memo` with custom comparison to prevent unnecessary re
 ## Performance Optimizations 🚀
 
 ### React.memo Usage
+
 ```typescript
 const CatListItem = React.memo(
   ({ cat, onPress }) => (...),
-  (prev, next) => 
+  (prev, next) =>
     prev.cat.id === next.cat.id &&
     prev.onPress === next.onPress
 );
 ```
 
 ### useCallback for Handlers
+
 ```typescript
 const handleLoadMore = useCallback(() => {
   // only recreated if dependencies change
@@ -278,14 +312,13 @@ const handleLoadMore = useCallback(() => {
 ```
 
 ### useMemo for Derived Data
+
 ```typescript
-const favoriteIds = useMemo(
-  () => favorites.map(f => f.id),
-  [favorites]
-);
+const favoriteIds = useMemo(() => favorites.map((f) => f.id), [favorites]);
 ```
 
 ### FlatList Optimization
+
 ```typescript
 <FlatList
   keyExtractor={(item) => item.id}
@@ -301,18 +334,21 @@ const favoriteIds = useMemo(
 ## Code Style Guidelines 📝
 
 ### TypeScript
+
 - Use strict mode (already enabled)
 - Type all props and returns
 - Use interfaces from `types/` folder
 - Avoid `any` type
 
 ### File Naming
+
 - Components: PascalCase (CatListItem.tsx)
 - Hooks: camelCase with 'use' prefix (useCats.ts)
 - Utils: camelCase (helpers.ts)
 - Types: snake_case file, exports PascalCase
 
 ### Import Order
+
 1. React/React Native
 2. Third-party libraries
 3. Redux/store
@@ -323,6 +359,7 @@ const favoriteIds = useMemo(
 8. Utils
 
 ### Comments
+
 - Function purpose (JSDoc style)
 - Complex logic explanation
 - TODO items
@@ -333,6 +370,7 @@ const favoriteIds = useMemo(
 ## Testing Checklist ✅
 
 ### Manual QA Before Review
+
 1. ✅ App opens, loads cats (first page)
 2. ✅ Scroll to bottom, loads next page (pagination)
 3. ✅ Tap cat, navigate to detail screen
@@ -352,6 +390,7 @@ const favoriteIds = useMemo(
 ## Implementation Checklist ✅
 
 ### Phase 1: Setup
+
 - [ ] Run `npm install` with new packages
 - [ ] Create `types/index.ts`
 - [ ] Create `types/store.ts`
@@ -362,6 +401,7 @@ const favoriteIds = useMemo(
 - [ ] Create `store/slices/favoritesSlice.ts`
 
 ### Phase 2: API Layer
+
 - [ ] Create `store/api/catsApi.ts`
 - [ ] Create `hooks/useCats.ts`
 - [ ] Create `hooks/useCatDetail.ts`
@@ -370,6 +410,7 @@ const favoriteIds = useMemo(
 - [ ] Create `utils/asyncStorage.ts`
 
 ### Phase 3: Components
+
 - [ ] Create `components/CatListItem.tsx` (memo)
 - [ ] Create `components/CatCard.tsx`
 - [ ] Create `components/FavoriteButton.tsx`
@@ -379,11 +420,13 @@ const favoriteIds = useMemo(
 - [ ] Create `components/ErrorMessage.tsx`
 
 ### Phase 4: Screens
+
 - [ ] Update `app/_layout.tsx`
 - [ ] Update `app/index.tsx` (list screen)
 - [ ] Create `app/[id].tsx` (detail screen)
 
 ### Phase 5: Polish
+
 - [ ] Test all QA scenarios
 - [ ] Fix any bugs
 - [ ] Run eslint
