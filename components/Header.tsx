@@ -1,5 +1,11 @@
 import React, { useMemo } from "react";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors, Spacing, Typography } from "../constants/theme";
 
@@ -7,6 +13,7 @@ interface HeaderProps {
   title?: string;
   favoritesCount: number;
   rightElement?: React.ReactNode;
+  onBadgePress?: () => void;
 }
 
 /**
@@ -17,6 +24,7 @@ const Header: React.FC<HeaderProps> = ({
   title = "Cat Gallery",
   favoritesCount,
   rightElement,
+  onBadgePress,
 }) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
@@ -32,10 +40,16 @@ const Header: React.FC<HeaderProps> = ({
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{title}</Text>
-        <View style={styles.badgeContainer}>
-          <Text style={styles.heartIcon}>❤️</Text>
-          <Text style={styles.badge}>{favoritesCount}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={onBadgePress}
+          disabled={!onBadgePress}
+          activeOpacity={onBadgePress ? 0.6 : 1}
+        >
+          <View style={styles.badgeContainer}>
+            <Text style={styles.heartIcon}>❤️</Text>
+            <Text style={styles.badge}>{favoritesCount}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
       {rightElement && <View style={styles.rightElement}>{rightElement}</View>}
     </View>

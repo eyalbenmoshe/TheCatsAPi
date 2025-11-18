@@ -34,7 +34,7 @@ export interface CatsResponse {
   data: Cat[];
   pagination?: {
     limit: number;
-    offset: number;
+    page: number;
   };
 }
 
@@ -43,5 +43,5 @@ export interface CatsResponse {
  */
 export interface CatsQuery {
   limit: number;
-  offset: number;
+  page: number;
 }

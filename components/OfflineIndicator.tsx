@@ -17,7 +17,7 @@ interface OfflineIndicatorProps {
 const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ isOnline }) => {
   // Show indicator only when offline
   const { top, bottom } = useSafeAreaInsets();
-  if (!isOnline) {
+  if (isOnline) {
     return null;
   }
 

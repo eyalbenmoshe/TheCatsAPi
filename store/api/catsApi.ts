@@ -20,8 +20,8 @@ export const catsApi = createApi({
   endpoints: (builder) => ({
     // Get paginated list of cats
     getCats: builder.query<Cat[], CatsQuery>({
-      query: ({ limit, offset }) =>
-        `/images/search?limit=${limit}&offset=${offset}`,
+      query: ({ limit, page }) =>
+        `/images/search?limit=${limit}&page=${page}`,
       // Merge paginated results
       serializeQueryArgs: ({ endpointName }) => endpointName,
       merge: (currentCache, newItems) => {

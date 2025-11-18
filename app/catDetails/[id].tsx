@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useMemo } from "react";
 import {
   StyleSheet,
+  Text,
   TouchableOpacity,
   useColorScheme,
   View,
@@ -13,11 +14,11 @@ import {
   FavoriteButton,
   Header,
   LoadingSpinner,
-} from "../components";
-import { Colors, Spacing } from "../constants/theme";
-import { useCatDetail } from "../hooks/useCatDetail";
-import { useFavorites } from "../hooks/useFavorites";
-import { useAppSelector } from "../store/store";
+} from "../../components";
+import { Colors, Spacing } from "../../constants/theme";
+import { useCatDetail } from "../../hooks/useCatDetail";
+import { useFavorites } from "../../hooks/useFavorites";
+import { useAppSelector } from "../../store/store";
 
 /**
  * Cat Detail Screen - Shows comprehensive information about a single cat
@@ -57,6 +58,13 @@ export default function CatDetailScreen() {
   }, [refetch]);
 
   /**
+   * Handle navigate to favorites
+   */
+  const handleBadgePress = useCallback(() => {
+    router.push("/favorites");
+  }, [router]);
+
+  /**
    * Render header with back button, favorite button, and count badge
    */
   const renderHeader = useMemo(
@@ -64,21 +72,19 @@ export default function CatDetailScreen() {
       <Header
         title="Cat Details"
         favoritesCount={favoritesCount}
+        onBadgePress={handleBadgePress}
         rightElement={
           <TouchableOpacity
             onPress={handleBackPress}
             style={styles.backButton}
             activeOpacity={0.6}
           >
-            <View>
-              <View style={styles.backButtonLine} />
-              <View style={styles.backButtonLine} />
-            </View>
+            <Text style={styles.backButtonIcon}>←</Text>
           </TouchableOpacity>
         }
       />
     ),
-    [favoritesCount, handleBackPress, styles]
+    [favoritesCount, handleBackPress, handleBadgePress, styles]
   );
 
   // Show loading state
@@ -146,11 +152,9 @@ const createStyles = (themeColors: typeof Colors.light) =>
       alignItems: "center",
       paddingHorizontal: Spacing.sm,
     },
-    backButtonLine: {
-      width: 6,
-      height: 2,
-      backgroundColor: themeColors.text,
-      marginVertical: 3,
-      transform: [{ rotate: "-45deg" }],
+    backButtonIcon: {
+      fontSize: 28,
+      color: themeColors.text,
+      fontWeight: "bold",
     },
   });

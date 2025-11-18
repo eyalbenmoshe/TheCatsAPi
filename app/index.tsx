@@ -42,7 +42,7 @@ export default function CatListScreen() {
    */
   const handleCatPress = useCallback(
     (cat: Cat) => {
-      router.push(`/${cat.id}`);
+      router.push(`/catDetails/${cat.id}`);
     },
     [router]
   );
@@ -53,6 +53,13 @@ export default function CatListScreen() {
   const handleRetry = useCallback(() => {
     loadMore();
   }, [loadMore]);
+
+  /**
+   * Handle navigate to favorites
+   */
+  const handleBadgePress = useCallback(() => {
+    router.push("/favorites");
+  }, [router]);
 
   /**
    * Render individual cat list item with favorite status
@@ -75,8 +82,14 @@ export default function CatListScreen() {
    * Render header with favorites count
    */
   const renderHeader = useMemo(
-    () => <Header title="Cat Gallery" favoritesCount={favoritesCount} />,
-    [favoritesCount]
+    () => (
+      <Header
+        title="Cat Gallery"
+        favoritesCount={favoritesCount}
+        onBadgePress={handleBadgePress}
+      />
+    ),
+    [favoritesCount, handleBadgePress]
   );
 
   // Show loading on first load

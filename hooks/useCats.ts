@@ -34,7 +34,7 @@ export const useCats = (): UseCatsReturn => {
   const queryParams = useMemo(
     () => ({
       limit: CATS_PER_PAGE,
-      offset,
+      page: offset,
     }),
     [offset]
   );
@@ -52,8 +52,8 @@ export const useCats = (): UseCatsReturn => {
   }, [error]);
 
   // Check if there are more cats to load
-  const hasMore = useMemo(() => data.length === CATS_PER_PAGE, [data.length]);
-
+  const hasMore = useMemo(() => data.length >= CATS_PER_PAGE, [data.length]);
+ 
   // Load next page
   const loadMore = useCallback(() => {
     if (hasMore && !isLoading) {

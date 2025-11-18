@@ -3,7 +3,8 @@
  */
 
 import { useMemo } from "react";
-import { useGetCatByIdQuery } from "../store/api/catsApi";
+import { selectAllCats } from "../store/api/catsSelectors";
+import { useAppSelector } from "../store/store";
 import type { Cat } from "../types/index";
 
 export interface UseCatDetailReturn {
@@ -17,24 +18,18 @@ export interface UseCatDetailReturn {
  * Custom hook for fetching a single cat's details
  */
 export const useCatDetail = (catId: string | undefined): UseCatDetailReturn => {
-  // Skip query if no ID provided
-  const { data, isLoading, error, refetch } = useGetCatByIdQuery(catId || "", {
-    skip: !catId,
-  });
+  // שליפת כל החתולים מהסטייט (cache של RTK Query) עם selector ממואז
+  const cats = useAppSelector(selectAllCats);
 
-  // Format error message
-  const errorMessage = useMemo(() => {
-    if (!error) return null;
-    if (typeof error === "string") return error;
-    if ("data" in error) return "Failed to load cat details";
-    if ("status" in error) return `Error: ${error.status}`;
-    return "An error occurred";
-  }, [error]);
+  const cat = useMemo(() => {
+    if (!catId) return null;
+    return cats.find((c: Cat) => c.id === catId) || null;
+  }, [catId, cats]);
 
   return {
-    cat: data || null,
-    isLoading,
-    error: errorMessage,
-    refetch,
+    cat,
+    isLoading: false,
+    error: null,
+    refetch: () => {},
   };
 };
